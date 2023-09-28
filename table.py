@@ -1,5 +1,6 @@
-ver = "v2.7.0"
-# писать в файл итоги \ верные результаты
+ver = "v2.8.0"
+# обработка исключений get_integer_input
+# дефолтные значения параметров
 # # # # # # # # # # # # # # # # #
 # TODO
 # # # # # # # # # # # # # # # # #
@@ -7,13 +8,28 @@ ver = "v2.7.0"
 # добавить оценку по прохождению теста
 # добавить вычитание \ сложение с выбором
 # объединить строку ввода информации в одну строку (or  \ and)
-# сделать глобальные перменные - PRIM и т.п.
 # # # # # # # # # # # # # # # # #
 
 
 # всякие импорты
 import random
 import datetime
+
+# дефолтные значения параметров
+# сложение
+MIN_OPERAND_ADDITION = 1
+MAX_OPERAND_ADDITION = 99
+# вычитание  
+MIN_OPERAND_SUBTRACTION = 1
+MAX_OPERAND_SUBTRACTION = 99
+# умножение 
+MIN_OPERAND_MULTIPLICATION = 2
+MAX_OPERAND_MULTIPLICATION = 9
+# деление 
+MIN_OPERAND_DIVISION = 2
+MAX_OPERAND_DIVISION = 9
+# Минимальное количество примеров
+MIN_PRIM = 5  
 
 # # # # # # # # # # # # # # # # #
 
@@ -29,7 +45,7 @@ print("Il███████████████████] ")
 print("◥⊙▲⊙▲⊙▲⊙▲⊙▲⊙▲⊙◤")
 print(f"                        ")
 
-
+# Меню
 def display_menu():
     print(f"                        ")
     print("\033[45m" + f"1. Умножение" + "\033[0m")
@@ -39,6 +55,17 @@ def display_menu():
     print("\033[45m" + f"5. Выход" + "\033[0m")
     print(f"                        ")
 
+# Обработки ошибок при вводе пользователем нечислового значения
+# вместо prim = int(input())
+# prim = get_integer_input("Введите количество примеров: ")
+# n = get_integer_input("Введите ваш ответ: ")
+def get_integer_input(prompt):
+    while True:
+        try:
+            user_input = int(input(prompt))
+            return user_input
+        except ValueError:
+            print("Ошибка: Введите целое число.")
 
 # Вариант 1 \ умножение
 def option_1():
@@ -47,24 +74,23 @@ def option_1():
     prav = 0  # количество правильных ответов
     neprav = 0  # количество не правильных ответов
 
-    print(f"Сколько примеров ты хочешь решить?")
-    prim = int(input())
-    if prim <= 3:
-        print(f"Как то мало, давай хотя бы 5)")
-        prim = 5
+    prim = get_integer_input("Введите количество примеров сколько ты хочешь решить: ")
+    if prim < MIN_PRIM:
+        print(f"Как то мало, давай хотя бы {MIN_PRIM})")
+        prim = MIN_PRIM
 
     print(f"                        ")
 
     # умножение
     with open("ответы.txt", "a") as file:  # открываем файлик режиме Add
         for i in range(1, prim + 1):
-            a = random.randint(2, 9)  # случайное целое число N, A ≤ N ≤ B.
-            b = random.randint(2, 9)  # случайное целое число N, A ≤ N ≤ B.
+            a = random.randint(MIN_OPERAND_MULTIPLICATION, MAX_OPERAND_MULTIPLICATION)  # случайное целое число N, A ≤ N ≤ B.
+            b = random.randint(MIN_OPERAND_MULTIPLICATION, MAX_OPERAND_MULTIPLICATION)  # случайное целое число N, A ≤ N ≤ B.
             m = a * b
 
             print("\033[30;47;1m" + f"Вопрос {i} из {prim}" + "\033[0m")
             print(f"Сколько будет {a} умножить на {b}?")
-            n = int(input())
+            n = get_integer_input("Введите ваш ответ: ")
             if m == n:
                 prav = prav + 1
                 print(
@@ -112,19 +138,18 @@ def option_2():
     prav = 0  # количество правильных ответов
     neprav = 0  # количество не правильных ответов
 
-    print(f"Сколько примеров ты хочешь решить?")
-    prim = int(input())
-    if prim <= 3:
-        print(f"Как то мало, давай хотя бы 5)")
-        prim = 5
+    prim = get_integer_input("Введите количество примеров сколько ты хочешь решить: ")
+    if prim < MIN_PRIM:
+        print(f"Как то мало, давай хотя бы {MIN_PRIM})")
+        prim = MIN_PRIM
 
     print(f"                        ")
 
     # вычитание
     with open("ответы.txt", "a") as file:  # открываем файлик режиме Add
         for i in range(1, prim + 1):
-            a = random.randint(1, 99)  # случайное целое число N, A ≤ N ≤ B.
-            b = random.randint(1, 99)  # случайное целое число N, A ≤ N ≤ B.
+            a = random.randint(MIN_OPERAND_SUBTRACTION, MAX_OPERAND_SUBTRACTION)  # случайное целое число N, A ≤ N ≤ B.
+            b = random.randint(MIN_OPERAND_SUBTRACTION, MAX_OPERAND_SUBTRACTION)  # случайное целое число N, A ≤ N ≤ B.
 
             if a < b:  # если a меньше b - меняем местами
                 a, b = b, a
@@ -135,7 +160,7 @@ def option_2():
 
             print("\033[30;47;1m" + f"Вопрос {i} из {prim}" + "\033[0m")
             print(f"Сколько будет из {a} вычесть {b}?")
-            n = int(input())
+            n = get_integer_input("Введите ваш ответ: ")
             if m == n:
                 prav = prav + 1
                 print(
@@ -182,25 +207,24 @@ def option_3():
     prav = 0  # количество правильных ответов
     neprav = 0  # количество не правильных ответов
 
-    print(f"Сколько примеров ты хочешь решить?")
-    prim = int(input())
-    if prim <= 3:
-        print(f"Как то мало, давай хотя бы 5)")
-        prim = 5
+    prim = get_integer_input("Введите количество примеров сколько ты хочешь решить: ")
+    if prim < MIN_PRIM:
+        print(f"Как то мало, давай хотя бы {MIN_PRIM})")
+        prim = MIN_PRIM
 
     print(f"                        ")
 
     # сложение
     with open("ответы.txt", "a") as file:  # открываем файлик режиме Add
         for i in range(1, prim + 1):
-            a = random.randint(1, 99)  # случайное целое число N, A ≤ N ≤ B.
-            b = random.randint(1, 99)  # случайное целое число N, A ≤ N ≤ B.
+            a = random.randint(MIN_OPERAND_ADDITION, MAX_OPERAND_ADDITION)  # случайное целое число N, A ≤ N ≤ B.
+            b = random.randint(MIN_OPERAND_ADDITION, MAX_OPERAND_ADDITION)  # случайное целое число N, A ≤ N ≤ B.
 
             m = a + b  # надо - a больше b
 
             print("\033[30;47;1m" + f"Вопрос {i} из {prim}" + "\033[0m")
             print(f"Сколько будет {a} прибавить к {b}?")
-            n = int(input())
+            n = get_integer_input("Введите ваш ответ: ")
             if m == n:
                 prav = prav + 1
                 print(
@@ -246,24 +270,23 @@ def option_4():
     prav = 0  # количество правильных ответов
     neprav = 0  # количество не правильных ответов
 
-    print(f"Сколько примеров ты хочешь решить?")
-    prim = int(input())
-    if prim <= 3:
-        print(f"Как то мало, давай хотя бы 5)")
-        prim = 5
+    prim = get_integer_input("Введите количество примеров сколько ты хочешь решить: ")
+    if prim < MIN_PRIM:
+        print(f"Как то мало, давай хотя бы {MIN_PRIM})")
+        prim = MIN_PRIM
 
     print(f"                        ")
     # вычитание
     with open("ответы.txt", "a") as file:  # открываем файлик режиме Add
         for i in range(1, prim + 1):
-            a = random.randint(2, 9)  # случайное целое число N, A ≤ N ≤ B.
-            b = random.randint(2, 9)  # случайное целое число N, A ≤ N ≤ B.
+            a = random.randint(MIN_OPERAND_SUBTRACTION, MAX_OPERAND_SUBTRACTION)  # случайное целое число N, A ≤ N ≤ B.
+            b = random.randint(MIN_OPERAND_SUBTRACTION, MAX_OPERAND_SUBTRACTION)  # случайное целое число N, A ≤ N ≤ B.
 
             m = a * b
 
             print("\033[30;47;1m" + f"Вопрос {i} из {prim}" + "\033[0m")
             print(f"Сколько будет {m} поделить на {a}?")
-            n = int(input())
+            n = get_integer_input("Введите ваш ответ: ")
             if b == n:
                 prav = prav + 1
                 print(
@@ -303,6 +326,7 @@ def option_4():
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         data = f"{timestamp} | Решено - {prim} - тема - деление\n"
         file.write(data)
+
 
 
 def main():
